@@ -2,8 +2,6 @@
 
 ![Staggered TTI](./staggered_tti.svg)
 
-![Burst TTI](./burst_tti.svg)
-
 [![Benchmarks](https://github.com/computesdk/benchmarks/actions/workflows/benchmarks.yml/badge.svg)](https://github.com/computesdk/benchmarks/actions/workflows/benchmarks.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -62,11 +60,11 @@ All tests run on GitHub Actions at 00:00 UTC daily. Providers are tested using C
 
 ## Sponsors
 
-Sponsors fund large-scale infrastructure tests. **Sponsors cannot influence methodology or results.**
+Sponsors enable independent benchmark infrastructure. **Sponsors cannot influence methodology or results.**
 
-<a href="https://archil.com/"><img src="./sponsors/archil-logo.webp" alt="Archil Logo" height="40"></a>
+<a href="https://archil.com/"><img src="./sponsors/archil-logo.png" alt="Archil Logo" height="40"></a>
 
-[Become a sponsor →](./SPONSORSHIP.md)
+[Learn more →](./SPONSORSHIP.md)
 
 <br>
 

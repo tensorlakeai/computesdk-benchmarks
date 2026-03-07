@@ -4,47 +4,40 @@ ComputeSDK Benchmarks is open source. We welcome contributions that improve meas
 
 ## For Sandbox Providers
 
-Want your provider included in the benchmark? 
+Want your provider included in our benchmarks? **Providers and sponsors are separate.** You don't need to sponsor to be benchmarked.
 
-**Option 1: Become a Sponsor**
+### How to Add Your Provider
 
-Sponsorship includes full integration and maintenance. See [SPONSORSHIP.md](./SPONSORSHIP.md).
+Submit a PR to [`computesdk/computesdk`](https://github.com/computesdk/computesdk) adding your provider to the `packages/` directory. 
 
-**Option 2: Submit a PR**
+See [`packages/e2b`](https://github.com/computesdk/computesdk/tree/main/packages/e2b) for a reference implementation.
 
-We accept community contributions to add providers. Requirements:
+**What happens next:**
+1. We review and merge your PR
+2. We publish your package as `@computesdk/<provider>` on npm
+3. We add your provider to the benchmarks
+4. You provide API credentials for ongoing daily tests
 
-1. **Public SDK**: Your provider must have a publicly available SDK (npm package preferred)
-2. **Standard Interface**: Must support basic sandbox operations (create, run command, destroy)
-3. **Free Tier or Credits**: We need ongoing API access for daily benchmarks
-4. **Documentation**: Clear setup instructions for API keys/credentials
+That's it. We handle the rest.
 
-### Adding a Provider (Direct Mode)
+### Requirements
 
-1. Create a new SDK wrapper in `src/direct-providers.ts`:
+- **Package Code:** Working integration in `packages/<provider>/`
+- **Standard Interface:** Support `create`, `run`, `destroy` operations
+- **API Access:** Provide credentials for ongoing daily benchmarks
+- **Stability:** Production-ready service
 
-```typescript
-export const yourProvider: DirectBenchmarkConfig = {
-  name: 'your-provider',
-  requiredEnvVars: ['YOUR_API_KEY'],
-  createCompute: () => new YourSDK({
-    apiKey: process.env.YOUR_API_KEY!,
-  }),
-};
-```
+---
 
-2. Add to the providers array in `src/direct-run.ts`
+## For Sponsors
 
-3. Update `env.example` with required environment variables
+**Sponsorship is completely separate from being a provider.**
 
-4. Submit a PR with:
-   - The code changes
-   - Documentation for obtaining API credentials
-   - Confirmation you can provide ongoing API access
+Sponsors are companies (AI studios, dev tools, platforms) that want visibility in front of developers making infrastructure decisions. See [SPONSORSHIP.md](./SPONSORSHIP.md) for details.
 
-### Adding a Provider (Magic Mode)
-
-Magic Mode requires integration with the ComputeSDK orchestrator. Open a GitHub issue to discuss.
+- Sponsors don't need to be providers
+- Providers don't need to sponsor
+- Results are independent of sponsorship status
 
 ## For General Contributors
 
@@ -108,3 +101,4 @@ npm run bench:direct -- --iterations 5
 ## Questions
 
 - **General questions**: Open a GitHub issue
+- **Sponsorship inquiries**: See [SPONSORSHIP.md](./SPONSORSHIP.md) or email garrison@computesdk.com
