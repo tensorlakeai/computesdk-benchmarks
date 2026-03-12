@@ -88,11 +88,15 @@ export async function runIteration(compute: any, timeout: number): Promise<Timin
 
     sandbox = await withTimeout(compute.sandbox.create(), timeout, 'Sandbox creation timed out');
 
-    await withTimeout(
+    const result = await withTimeout(
       sandbox.runCommand('node -v'),
       30_000,
       'First command execution timed out'
-    );
+    ) as { exitCode: number; stderr?: string };
+
+    if (result.exitCode !== 0) {
+      throw new Error(`Command failed with exit code ${result.exitCode}: ${result.stderr || 'Unknown error'}`);
+    }
 
     const ttiMs = performance.now() - start;
 
