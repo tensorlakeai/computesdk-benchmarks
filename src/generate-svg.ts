@@ -7,10 +7,11 @@ import { sortByCompositeScore, computeCompositeScores } from './scoring.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const RESULTS_DIR = path.join(ROOT, 'results');
-const SPONSORS_DIR = path.join(ROOT, 'sponsors');
+const SPONSORS_DIR = path.join(ROOT, 'sponsors', 'tier-1');
 
 /**
- * Load all sponsor logos from the sponsors/ directory.
+ * Load Tier 1 (Platform Sponsor) logos from the sponsors/tier-1/ directory.
+ * Only Tier 1 sponsors appear in SVG table headers.
  * Returns an array of { dataUri, name } for each image file found, sorted alphabetically.
  */
 function loadSponsorImages(): { dataUri: string; name: string }[] {
