@@ -37,7 +37,7 @@ function scoreLatency(valueMs: number): number {
 
 /**
  * Score a throughput value (higher is better).
- * MIN_THROUGHPUT_MBPS = 0, MAX_THROUGHPUT_MBPS = 100, values are clamped.
+ * Values <= 1 Mbps score 0, values >= 1000 Mbps score 100, linearly interpolated between.
  */
 function scoreThroughput(mbps: number): number {
   if (mbps <= MIN_THROUGHPUT_MBPS) return 0;

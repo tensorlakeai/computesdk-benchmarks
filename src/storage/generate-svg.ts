@@ -78,9 +78,8 @@ function formatMbps(mbps: number): string {
 const sponsorImages = loadSponsorImages();
 
 function generateSVG(results: StorageBenchmarkResult[], timestamp: string, fileSizeLabel: string): string {
-  // Compute scores if not already attached
-  const hasScores = results.some(r => r.compositeScore !== undefined);
-  if (!hasScores) {
+  // Compute scores if any are missing
+  if (!results.every(r => r.compositeScore !== undefined)) {
     computeStorageCompositeScores(results);
   }
 
@@ -230,7 +229,7 @@ ${sponsorImages.length > 0 ? (() => {
   <text class="timestamp" x="${width - padding}" y="${height - 28}" text-anchor="end">Last updated: ${date}</text>
 
   <!-- Footnote -->
-  <text class="timestamp" x="${padding}" y="${height - 14}">Tests download then upload. Lower download time is better. Higher throughput is better.</text>
+  <text class="timestamp" x="${padding}" y="${height - 14}">Tests upload then download. Lower download time is better. Throughput is computed from download timing.</text>
 
 </svg>`;
 

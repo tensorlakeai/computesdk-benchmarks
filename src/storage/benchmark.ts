@@ -1,5 +1,10 @@
 import crypto from 'crypto';
-import type { StorageProviderConfig, StorageBenchmarkResult, StorageTimingResult, StorageStats } from './types.js';
+import { withTimeout } from '../benchmark.js';
+import type { StorageProviderConfig, StorageBenchmarkResult, StorageTimingResult } from './types.js';
+
+function round(n: number): number {
+  return Math.round(n * 100) / 100;
+}
 
 function percentile(sorted: number[], p: number): number {
   const idx = Math.ceil((p / 100) * sorted.length) - 1;
@@ -31,23 +36,14 @@ function randomId(): string {
   return Math.random().toString(36).substring(2, 15);
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
-  let timer: ReturnType<typeof setTimeout>;
-  return Promise.race([
-    promise.then(v => { clearTimeout(timer); return v; }),
-    new Promise<T>((_, reject) => {
-      timer = setTimeout(() => reject(new Error(message)), ms);
-    }),
-  ]);
-}
 
 async function runStorageIteration(
   storage: any,
   bucket: string,
-  fileSizeBytes: number,
+  testData: Buffer,
   timeout: number
 ): Promise<StorageTimingResult> {
-  const testData = crypto.randomBytes(fileSizeBytes);
+  const fileSizeBytes = testData.length;
   const key = `benchmark-${Date.now()}-${randomId()}`;
 
   try {
@@ -89,7 +85,7 @@ async function runStorageIteration(
     
     // Attempt cleanup even on failure
     try {
-      await storage.delete(bucket, key);
+      await withTimeout(storage.delete(bucket, key), 10000, 'Delete timed out');
     } catch {
       // Ignore cleanup errors
     }
@@ -123,6 +119,7 @@ export async function runStorageBenchmark(config: StorageProviderConfig, fileSiz
   const storage = createStorage();
   const results: StorageTimingResult[] = [];
   const fileSizeLabel = `${(fileSizeBytes / 1024 / 1024).toFixed(0)}MB`;
+  const testData = crypto.randomBytes(fileSizeBytes);
 
   console.log(`\n--- Storage Benchmarking: ${name} (${fileSizeLabel}, ${iterations} iterations) ---`);
 
@@ -130,7 +127,7 @@ export async function runStorageBenchmark(config: StorageProviderConfig, fileSiz
     console.log(`  Iteration ${i + 1}/${iterations}...`);
 
     try {
-      const iterationResult = await runStorageIteration(storage, bucket, fileSizeBytes, timeout);
+      const iterationResult = await runStorageIteration(storage, bucket, testData, timeout);
       results.push(iterationResult);
 
       if (iterationResult.error) {
@@ -181,4 +178,53 @@ export async function runStorageBenchmark(config: StorageProviderConfig, fileSiz
       throughputMbps: computeStorageStats(throughputs),
     },
   };
+}
+
+function roundStats(s: { median: number; p95: number; p99: number }) {
+  return { median: round(s.median), p95: round(s.p95), p99: round(s.p99) };
+}
+
+export async function writeStorageResultsJson(results: StorageBenchmarkResult[], outPath: string): Promise<void> {
+  const fs = await import('fs');
+  const os = await import('os');
+
+  const cleanResults = results.map(r => ({
+    provider: r.provider,
+    mode: r.mode,
+    bucket: r.bucket,
+    fileSizeBytes: r.fileSizeBytes,
+    iterations: r.iterations.map(i => ({
+      uploadMs: round(i.uploadMs),
+      downloadMs: round(i.downloadMs),
+      throughputMbps: round(i.throughputMbps),
+      fileSizeBytes: i.fileSizeBytes,
+      ...(i.error ? { error: i.error } : {}),
+    })),
+    summary: {
+      uploadMs: roundStats(r.summary.uploadMs),
+      downloadMs: roundStats(r.summary.downloadMs),
+      throughputMbps: roundStats(r.summary.throughputMbps),
+    },
+    ...(r.compositeScore !== undefined ? { compositeScore: round(r.compositeScore) } : {}),
+    ...(r.successRate !== undefined ? { successRate: round(r.successRate) } : {}),
+    ...(r.skipped ? { skipped: r.skipped, skipReason: r.skipReason } : {}),
+  }));
+
+  const output = {
+    version: '1.1',
+    timestamp: new Date().toISOString(),
+    environment: {
+      node: process.version,
+      platform: os.platform(),
+      arch: os.arch(),
+    },
+    config: {
+      iterations: results[0]?.iterations.length || 0,
+      timeoutMs: 30000,
+    },
+    results: cleanResults,
+  };
+
+  fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
+  console.log(`Results written to ${outPath}`);
 }

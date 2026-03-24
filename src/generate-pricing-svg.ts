@@ -186,9 +186,8 @@ function loadLiveBenchmarkScores(): Map<string, { score: number; successRate: st
     const data = JSON.parse(raw);
     const results: BenchmarkResult[] = data.results;
 
-    // Compute composite scores if not already present
-    const hasScores = results.some(r => r.compositeScore !== undefined);
-    if (!hasScores) {
+    // Compute scores if any are missing
+    if (!results.every(r => r.compositeScore !== undefined)) {
       computeCompositeScores(results);
     }
 

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { runBenchmark } from './benchmark.js';
 import { runConcurrentBenchmark } from './concurrent.js';
 import { runStaggeredBenchmark } from './staggered.js';
-import { runStorageBenchmark } from './storage/benchmark.js';
+import { runStorageBenchmark, writeStorageResultsJson } from './storage/benchmark.js';
 import { printResultsTable, writeResultsJson } from './table.js';
 import { providers } from './providers.js';
 import { storageProviders } from './storage/providers.js';
@@ -115,7 +115,12 @@ async function runMode(mode: BenchmarkMode, toRun: typeof providers): Promise<vo
 
 async function runStorage(toRun: typeof storageProviders, fileSizeLabel: string): Promise<void> {
   const { FILE_SIZE_BYTES } = await import('./storage/types.js');
-  const fileSizeBytes = FILE_SIZE_BYTES[fileSizeLabel as keyof typeof FILE_SIZE_BYTES] || FILE_SIZE_BYTES['10MB'];
+  const validSizes = Object.keys(FILE_SIZE_BYTES);
+  if (!(fileSizeLabel in FILE_SIZE_BYTES)) {
+    console.error(`Invalid --file-size "${fileSizeLabel}". Valid sizes: ${validSizes.join(', ')}`);
+    process.exit(1);
+  }
+  const fileSizeBytes = FILE_SIZE_BYTES[fileSizeLabel as keyof typeof FILE_SIZE_BYTES];
 
   console.log('\n' + '='.repeat(70));
   console.log('  MODE: STORAGE');
@@ -152,7 +157,7 @@ async function runStorage(toRun: typeof storageProviders, fileSizeLabel: string)
   fs.mkdirSync(sizeDir, { recursive: true });
 
   const outPath = path.join(sizeDir, `${timestamp}.json`);
-  await writeResultsJson(results, outPath);
+  await writeStorageResultsJson(results, outPath);
 
   // Copy results to latest.json
   const latestPath = path.join(sizeDir, 'latest.json');

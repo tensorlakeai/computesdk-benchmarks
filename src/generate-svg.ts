@@ -152,9 +152,8 @@ function buildFootnote(results: BenchmarkResult[], mode: string): string {
 const sponsorImages = loadSponsorImages();
 
 function generateSVG(results: BenchmarkResult[], timestamp: string, mode: string): string {
-  // Compute scores if not already attached
-  const hasScores = results.some(r => r.compositeScore !== undefined);
-  if (!hasScores) {
+  // Compute scores if any are missing
+  if (!results.every(r => r.compositeScore !== undefined)) {
     computeCompositeScores(results);
   }
 
