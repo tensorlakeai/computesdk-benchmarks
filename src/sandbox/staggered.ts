@@ -1,5 +1,6 @@
 import type { ProviderConfig, TimingResult, StaggeredBenchmarkResult } from './types.js';
-import { runIteration, computeStats } from './benchmark.js';
+import { runIteration } from './benchmark.js';
+import { computeStats } from '../util/stats.js';
 
 interface StaggeredConfig extends ProviderConfig {
   concurrency: number;

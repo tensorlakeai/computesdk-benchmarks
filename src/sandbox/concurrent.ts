@@ -1,5 +1,6 @@
 import type { ProviderConfig, TimingResult, ConcurrentBenchmarkResult } from './types.js';
-import { runIteration, computeStats, withTimeout } from './benchmark.js';
+import { runIteration } from './benchmark.js';
+import { computeStats } from '../util/stats.js';
 
 interface ConcurrentConfig extends ProviderConfig {
   concurrency: number;

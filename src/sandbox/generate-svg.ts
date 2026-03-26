@@ -5,7 +5,7 @@ import type { BenchmarkResult, BenchmarkMode, ConcurrentBenchmarkResult, Stagger
 import { sortByCompositeScore, computeCompositeScores } from './scoring.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '../..');
 const RESULTS_DIR = path.join(ROOT, 'results');
 const SPONSORS_DIR_TIER1 = path.join(ROOT, 'sponsors', 'tier-1');
 const SPONSORS_DIR_TIER2 = path.join(ROOT, 'sponsors', 'tier-2');

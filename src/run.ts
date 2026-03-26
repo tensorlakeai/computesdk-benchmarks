@@ -2,16 +2,16 @@ import fs from 'fs';
 import { config } from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { runBenchmark } from './benchmark.js';
-import { runConcurrentBenchmark } from './concurrent.js';
-import { runStaggeredBenchmark } from './staggered.js';
+import { runBenchmark } from './sandbox/benchmark.js';
+import { runConcurrentBenchmark } from './sandbox/concurrent.js';
+import { runStaggeredBenchmark } from './sandbox/staggered.js';
 import { runStorageBenchmark, writeStorageResultsJson } from './storage/benchmark.js';
-import { printResultsTable, writeResultsJson } from './table.js';
-import { providers } from './providers.js';
+import { printResultsTable, writeResultsJson } from './sandbox/table.js';
+import { providers } from './sandbox/providers.js';
 import { storageProviders } from './storage/providers.js';
-import { computeCompositeScores } from './scoring.js';
+import { computeCompositeScores } from './sandbox/scoring.js';
 import { computeStorageCompositeScores } from './storage/scoring.js';
-import type { BenchmarkResult, BenchmarkMode } from './types.js';
+import type { BenchmarkResult, BenchmarkMode } from './sandbox/types.js';
 import type { StorageBenchmarkResult } from './storage/types.js';
 
 // Load .env from the benchmarking root

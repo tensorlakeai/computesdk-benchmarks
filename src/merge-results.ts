@@ -10,9 +10,9 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { computeCompositeScores } from './scoring.js';
-import { printResultsTable, writeResultsJson } from './table.js';
-import type { BenchmarkResult } from './types.js';
+import { computeCompositeScores } from './sandbox/scoring.js';
+import { printResultsTable, writeResultsJson } from './sandbox/table.js';
+import type { BenchmarkResult } from './sandbox/types.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');

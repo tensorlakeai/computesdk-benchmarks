@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import type { BenchmarkResult, ConcurrentBenchmarkResult } from './types.js';
-import { sortByCompositeScore, computeCompositeScores } from './scoring.js';
+import type { BenchmarkResult, ConcurrentBenchmarkResult } from './sandbox/types.js';
+import { sortByCompositeScore, computeCompositeScores } from './sandbox/scoring.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');

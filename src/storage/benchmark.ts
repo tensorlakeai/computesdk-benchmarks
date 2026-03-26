@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { withTimeout } from '../benchmark.js';
+import { withTimeout } from '../util/timeout.js';
 import type { StorageProviderConfig, StorageBenchmarkResult, StorageTimingResult } from './types.js';
 
 function round(n: number): number {
