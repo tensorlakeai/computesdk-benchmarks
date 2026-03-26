@@ -88,7 +88,7 @@ jobs:
           npm run bench -- \
             --provider ${{ matrix.provider }} \
             --iterations ${{ github.event.inputs.iterations || (github.event_name == 'pull_request' && '10') || '100' }} \
-            --concurrency ${{ github.event.inputs.concurrency || '100' }} \
+            --concurrency ${{ github.event.inputs.concurrency || (github.event_name == 'pull_request' && '10') || '100' }} \
             $MODE_FLAG
       - name: Upload results
         if: always()
