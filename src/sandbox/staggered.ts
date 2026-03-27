@@ -1,24 +1,28 @@
-import type { ProviderConfig, TimingResult, ConcurrentBenchmarkResult } from './types.js';
-import { runIteration, computeStats, withTimeout } from './benchmark.js';
+import type { ProviderConfig, TimingResult, StaggeredBenchmarkResult } from './types.js';
+import { runIteration } from './benchmark.js';
+import { computeStats } from '../util/stats.js';
 
-interface ConcurrentConfig extends ProviderConfig {
+interface StaggeredConfig extends ProviderConfig {
   concurrency: number;
+  staggerDelayMs: number;
 }
 
-export async function runConcurrentBenchmark(config: ConcurrentConfig): Promise<ConcurrentBenchmarkResult> {
-  const { name, concurrency, timeout = 120_000, requiredEnvVars, sandboxOptions } = config;
+export async function runStaggeredBenchmark(config: StaggeredConfig): Promise<StaggeredBenchmarkResult> {
+  const { name, concurrency, staggerDelayMs, timeout = 120_000, requiredEnvVars, sandboxOptions } = config;
 
   // Check if all required credentials are available
   const missingVars = requiredEnvVars.filter(v => !process.env[v]);
   if (missingVars.length > 0) {
     return {
       provider: name,
-      mode: 'concurrent',
+      mode: 'staggered',
       concurrency,
+      staggerDelayMs,
       iterations: [],
       summary: { ttiMs: { median: 0, p95: 0, p99: 0 } },
       wallClockMs: 0,
       timeToFirstReadyMs: 0,
+      rampProfile: [],
       skipped: true,
       skipReason: `Missing: ${missingVars.join(', ')}`,
     };
@@ -26,23 +30,35 @@ export async function runConcurrentBenchmark(config: ConcurrentConfig): Promise<
 
   const compute = config.createCompute();
 
-  console.log(`\n--- Concurrent Benchmark: ${name} (${concurrency} sandboxes) ---`);
+  console.log(`\n--- Staggered Benchmark: ${name} (${concurrency} sandboxes, ${staggerDelayMs}ms apart) ---`);
 
   const wallStart = performance.now();
+  const promises: Promise<TimingResult>[] = [];
+  const rampProfile: { launchedAt: number; readyAt: number; ttiMs: number }[] = [];
 
-  // Fire all sandbox creations simultaneously — no awaiting between launches
-  const promises = Array.from({ length: concurrency }, (_, i) =>
-    runIteration(compute, timeout, sandboxOptions)
+  for (let i = 0; i < concurrency; i++) {
+    const launchedAt = performance.now() - wallStart;
+
+    const p = runIteration(compute, timeout, sandboxOptions)
       .then(result => {
-        console.log(`  Sandbox ${i + 1}/${concurrency}: TTI ${(result.ttiMs / 1000).toFixed(2)}s`);
+        const readyAt = performance.now() - wallStart;
+        rampProfile.push({ launchedAt, readyAt, ttiMs: result.ttiMs });
+        console.log(`  Sandbox ${i + 1}/${concurrency}: TTI ${(result.ttiMs / 1000).toFixed(2)}s (launched at +${(launchedAt / 1000).toFixed(2)}s)`);
         return result;
       })
       .catch(err => {
         const error = err instanceof Error ? err.message : String(err);
         console.log(`  Sandbox ${i + 1}/${concurrency}: FAILED — ${error}`);
         return { ttiMs: 0, error } as TimingResult;
-      })
-  );
+      });
+
+    promises.push(p);
+
+    // Wait before launching next (except after the last one)
+    if (i < concurrency - 1) {
+      await new Promise(resolve => setTimeout(resolve, staggerDelayMs));
+    }
+  }
 
   const results = await Promise.all(promises);
   const wallClockMs = performance.now() - wallStart;
@@ -52,12 +68,14 @@ export async function runConcurrentBenchmark(config: ConcurrentConfig): Promise<
   if (successful.length === 0) {
     return {
       provider: name,
-      mode: 'concurrent',
+      mode: 'staggered',
       concurrency,
+      staggerDelayMs,
       iterations: results,
       summary: { ttiMs: { median: 0, p95: 0, p99: 0 } },
       wallClockMs,
       timeToFirstReadyMs: 0,
+      rampProfile: rampProfile.sort((a, b) => a.launchedAt - b.launchedAt),
       skipped: true,
       skipReason: 'All sandboxes failed',
     };
@@ -70,13 +88,15 @@ export async function runConcurrentBenchmark(config: ConcurrentConfig): Promise<
 
   return {
     provider: name,
-    mode: 'concurrent',
+    mode: 'staggered',
     concurrency,
+    staggerDelayMs,
     iterations: results,
     summary: {
       ttiMs: computeStats(successfulTimes),
     },
     wallClockMs,
     timeToFirstReadyMs,
+    rampProfile: rampProfile.sort((a, b) => a.launchedAt - b.launchedAt),
   };
 }
