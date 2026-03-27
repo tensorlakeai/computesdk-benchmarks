@@ -84,8 +84,6 @@ export const providers: ProviderConfig[] = [
     createCompute: () => sprites({ apiKey: process.env.SPRITES_TOKEN! }),
   },
   //
-  // --- add in freestyle here
-  //
   // --- Automatic mode (via ComputeSDK gateway) ---
   // {
   //   name: 'railway',
