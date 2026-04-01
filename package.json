@@ -21,6 +21,8 @@
     "bench:vercel": "tsx src/run.ts --provider vercel",
     "bench:just-bash": "tsx src/run.ts --provider just-bash",
     "bench:sprites": "tsx src/run.ts --provider sprites",
+    "bench:browser": "tsx src/run.ts --mode browser",
+    "bench:browser:browserbase": "tsx src/run.ts --mode browser --provider browserbase",
     "bench:storage": "tsx src/run.ts --mode storage",
     "bench:storage:s3": "tsx src/run.ts --mode storage --provider aws-s3",
     "bench:storage:r2": "tsx src/run.ts --mode storage --provider cloudflare-r2",
@@ -38,6 +40,7 @@
   },
   "dependencies": {
     "@computesdk/blaxel": "^1.6.0",
+    "@computesdk/browserbase": "^0.2.0",
     "@computesdk/cloudflare": "^1.6.0",
     "@computesdk/codesandbox": "^1.5.40",
     "@computesdk/daytona": "^1.7.14",
@@ -53,7 +56,8 @@
     "@computesdk/tigris": "^1.0.0",
     "@computesdk/vercel": "^1.7.13",
     "computesdk": "^2.2.1",
-    "dotenv": "^17.2.1"
+    "dotenv": "^17.2.1",
+    "playwright-core": "^1.59.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
