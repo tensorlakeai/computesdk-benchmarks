@@ -10,6 +10,7 @@ import { runloop } from '@computesdk/runloop';
 import { namespace } from '@computesdk/namespace';
 import { cloudflare } from '@computesdk/cloudflare';
 import { sprites } from '@computesdk/sprites';
+import { tensorlake } from '@computesdk/tensorlake';
 import { compute } from 'computesdk';
 import type { ProviderConfig } from './types.js';
 
@@ -83,6 +84,14 @@ export const providers: ProviderConfig[] = [
     name: 'sprites',
     requiredEnvVars: ['SPRITES_TOKEN'],
     createCompute: () => sprites({ apiKey: process.env.SPRITES_TOKEN! }),
+  },
+  {
+    name: 'tensorlake',
+    requiredEnvVars: ['TENSORLAKE_API_KEY'],
+    createCompute: () => tensorlake({
+      apiKey: process.env.TENSORLAKE_API_KEY!,
+      region: process.env.TENSORLAKE_REGION,
+    }),
   },
   //
   // --- Automatic mode (via ComputeSDK gateway) ---
