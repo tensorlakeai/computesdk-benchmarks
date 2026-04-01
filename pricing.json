@@ -754,6 +754,57 @@
       "free_credits": 200,
       "isolation": "docker_oci",
       "notes": "Failed benchmark run. Raised $24M Series A Feb 2026. Docker/OCI containers by default (not microVMs). Optional Kata Containers for stronger isolation. Sub-90ms cold starts from warm pool. Auto-stop at 15min idle."
+    },
+    {
+      "id": "tensorlake",
+      "benchmark": {
+        "score": null,
+        "success_rate": "0/100",
+        "status": "pending",
+        "cold_start_ms": null
+      },
+      "pricing": {
+        "model": "per_second",
+        "cpu": {
+          "rate": 0.00001,
+          "unit": "vCPU-sec",
+          "confidence": "estimated"
+        },
+        "memory": {
+          "rate": 0.000002,
+          "unit": "GiB-sec",
+          "bundled_with_cpu": false,
+          "confidence": "estimated"
+        },
+        "storage": {
+          "included_gb": 5,
+          "overage_rate": null,
+          "overage_unit": null,
+          "confidence": "unknown"
+        },
+        "egress": {
+          "rate": null,
+          "free_gb_per_month": null,
+          "confidence": "unknown"
+        },
+        "normalized": {
+          "cpu_per_vcpu_hr": 0.036,
+          "memory_per_gib_hr": 0.0072,
+          "total_1vcpu_2gb_hr": 0.0504,
+          "confidence": "estimated"
+        }
+      },
+      "plans": [
+        {
+          "name": "standard",
+          "base_fee_per_month": 0,
+          "credits": null,
+          "requires_cc": false
+        }
+      ],
+      "free_credits": null,
+      "isolation": "microvm",
+      "notes": "Tensorlake sandbox offering. High-performance AI-focused sandboxes."
     }
   ]
 }
