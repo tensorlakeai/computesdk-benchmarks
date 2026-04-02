@@ -3,7 +3,7 @@ export interface BrowserProviderConfig {
   name: string;
   /** Number of iterations (default: 25) */
   iterations?: number;
-  /** Timeout per iteration in ms (default: 120000) */
+  /** Timeout for session creation in ms (default: 120000) */
   timeout?: number;
   /** Environment variables that must all be set to run this benchmark */
   requiredEnvVars: string[];

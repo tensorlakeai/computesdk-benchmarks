@@ -226,8 +226,12 @@ async function main() {
       : browserProviders;
 
     if (toRun.length === 0) {
-      console.error(`Unknown browser provider: ${providerFilter}`);
-      console.error(`Available: ${browserProviders.map(p => p.name).join(', ')}`);
+      if (providerFilter) {
+        console.error(`Unknown browser provider: ${providerFilter}`);
+        console.error(`Available: ${browserProviders.map(p => p.name).join(', ')}`);
+      } else {
+        console.error('No browser providers configured. Add entries to src/browser/providers.ts.');
+      }
       process.exit(1);
     }
 

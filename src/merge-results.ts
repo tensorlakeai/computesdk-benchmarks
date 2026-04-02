@@ -1,7 +1,7 @@
 /**
  * Merge per-provider benchmark results into combined result files.
  *
- * Usage: tsx src/merge-results.ts --input <artifacts-dir> [--mode storage]
+ * Usage: tsx src/merge-results.ts --input <artifacts-dir> [--mode storage|browser]
  *
  * By default, merges sandbox benchmark results: reads latest.json files from
  * the input directory, groups by mode (sequential/staggered/burst), computes
@@ -10,6 +10,10 @@
  * With --mode storage, merges storage benchmark results instead: groups by
  * file size (1mb/10mb/100mb), computes storage-specific composite scores,
  * and writes combined files to results/storage/<size>/latest.json.
+ *
+ * With --mode browser, merges browser benchmark results: deduplicates by
+ * provider, computes browser-specific composite scores, and writes combined
+ * files to results/browser/latest.json.
  */
 import fs from 'fs';
 import path from 'path';
@@ -34,7 +38,7 @@ function getArgValue(flag: string): string | undefined {
 const inputDir = getArgValue('--input');
 const mergeMode = getArgValue('--mode');
 if (!inputDir) {
-  console.error('Usage: tsx src/merge-results.ts --input <artifacts-dir> [--mode storage]');
+  console.error('Usage: tsx src/merge-results.ts --input <artifacts-dir> [--mode storage|browser]');
   process.exit(1);
 }
 

@@ -49,16 +49,17 @@ async function runBrowserIteration(
     ) as { sessionId: string; connectUrl: string };
     timings.createMs = performance.now() - createStart;
 
+    let browser;
     try {
       // 2. Connect over CDP
       const connectStart = performance.now();
-      const browser = await withTimeout(
+      browser = await withTimeout(
         chromium.connectOverCDP(session.connectUrl),
         30_000,
         'CDP connection timed out',
       );
-      const context = browser.contexts()[0]!;
-      const page = context.pages()[0]!;
+      const context = await browser.newContext();
+      const page = await context.newPage();
       timings.connectMs = performance.now() - connectStart;
 
       // 3. Navigate
@@ -69,11 +70,11 @@ async function runBrowserIteration(
         'Navigation timed out',
       );
       timings.navigateMs = performance.now() - navStart;
-
-      await page.close();
-      await browser.close();
     } finally {
-      // 4. Release session
+      // 4. Close browser and release session
+      if (browser) {
+        await browser.close().catch(() => {});
+      }
       const releaseStart = performance.now();
       await withTimeout(
         provider.session.destroy(session.sessionId),

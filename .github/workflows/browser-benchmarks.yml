@@ -6,6 +6,7 @@ on:
       - 'src/browser/**'
       - 'src/util/**'
       - 'src/run.ts'
+      - 'src/merge-results.ts'
       - 'package.json'
   workflow_dispatch:
     inputs:
