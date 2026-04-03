@@ -1,7 +1,6 @@
 import { e2b } from '@computesdk/e2b';
 import { daytona } from '@computesdk/daytona';
 import { blaxel } from '@computesdk/blaxel';
-import { justBash } from '@computesdk/just-bash';
 import { modal } from '@computesdk/modal';
 import { vercel } from '@computesdk/vercel';
 import { hopx } from '@computesdk/hopx';
@@ -36,11 +35,6 @@ export const providers: ProviderConfig[] = [
     name: 'blaxel',
     requiredEnvVars: ['BL_API_KEY', 'BL_WORKSPACE'],
     createCompute: () => blaxel({ apiKey: process.env.BL_API_KEY!, workspace: process.env.BL_WORKSPACE!, region: 'us-was-1' }),
-  },
-  {
-    name: 'just-bash',
-    requiredEnvVars: [],
-    createCompute: () => justBash({ files: {} }),
   },
   {
     name: 'modal',
