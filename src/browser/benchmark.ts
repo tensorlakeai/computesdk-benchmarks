@@ -135,24 +135,6 @@ export async function runBrowserBenchmark(config: BrowserProviderConfig): Promis
 
   const successful = results.filter(r => !r.error);
 
-  // If every iteration failed, mark as skipped
-  if (successful.length === 0) {
-    return {
-      provider: name,
-      mode: 'browser',
-      iterations: results,
-      summary: {
-        createMs: { median: 0, p95: 0, p99: 0 },
-        connectMs: { median: 0, p95: 0, p99: 0 },
-        navigateMs: { median: 0, p95: 0, p99: 0 },
-        releaseMs: { median: 0, p95: 0, p99: 0 },
-        totalMs: { median: 0, p95: 0, p99: 0 },
-      },
-      skipped: true,
-      skipReason: 'All iterations failed',
-    };
-  }
-
   return {
     provider: name,
     mode: 'browser',

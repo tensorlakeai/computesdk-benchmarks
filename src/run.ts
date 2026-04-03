@@ -150,9 +150,11 @@ async function runStorage(toRun: typeof storageProviders, fileSizeLabel: string)
       console.log(`${r.provider}: SKIPPED (${r.skipReason})`);
       continue;
     }
+    const ok = r.iterations.filter(i => !i.error).length;
+    const total = r.iterations.length;
     console.log(`${r.provider}:`);
     console.log(`  Download: ${(r.summary.downloadMs.median / 1000).toFixed(2)}s (median), ${r.summary.throughputMbps.median.toFixed(2)} Mbps`);
-    console.log(`  Score: ${r.compositeScore?.toFixed(1) || '--'}`);
+    console.log(`  Score: ${r.compositeScore?.toFixed(1) || '--'} (${ok}/${total} OK)`);
   }
 
   // Write JSON results to storage subdirectory with file size
@@ -193,9 +195,11 @@ async function runBrowser(toRun: typeof browserProviders): Promise<void> {
       console.log(`${r.provider}: SKIPPED (${r.skipReason})`);
       continue;
     }
+    const ok = r.iterations.filter(i => !i.error).length;
+    const total = r.iterations.length;
     console.log(`${r.provider}:`);
     console.log(`  Total: ${(r.summary.totalMs.median / 1000).toFixed(2)}s (median) — create ${(r.summary.createMs.median / 1000).toFixed(2)}s + connect ${(r.summary.connectMs.median / 1000).toFixed(2)}s + navigate ${(r.summary.navigateMs.median / 1000).toFixed(2)}s + release ${(r.summary.releaseMs.median / 1000).toFixed(2)}s`);
-    console.log(`  Score: ${r.compositeScore?.toFixed(1) || '--'}`);
+    console.log(`  Score: ${r.compositeScore?.toFixed(1) || '--'} (${ok}/${total} OK)`);
   }
 
   // Write JSON results to browser subdirectory

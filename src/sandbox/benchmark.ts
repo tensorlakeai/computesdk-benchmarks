@@ -38,22 +38,13 @@ export async function runBenchmark(config: ProviderConfig): Promise<BenchmarkRes
 
   const successful = results.filter(r => !r.error);
 
-  // If every iteration failed, mark as skipped so it doesn't show 0.00s
-  if (successful.length === 0) {
-    return {
-      provider: name,
-      iterations: results,
-      summary: { ttiMs: { median: 0, p95: 0, p99: 0 } },
-      skipped: true,
-      skipReason: 'All iterations failed',
-    };
-  }
-
   return {
     provider: name,
     iterations: results,
     summary: {
-      ttiMs: computeStats(successful.map(r => r.ttiMs)),
+      ttiMs: successful.length > 0
+        ? computeStats(successful.map(r => r.ttiMs))
+        : { median: 0, p95: 0, p99: 0 },
     },
   };
 }

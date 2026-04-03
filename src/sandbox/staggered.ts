@@ -65,24 +65,8 @@ export async function runStaggeredBenchmark(config: StaggeredConfig): Promise<St
 
   const successful = results.filter(r => !r.error);
 
-  if (successful.length === 0) {
-    return {
-      provider: name,
-      mode: 'staggered',
-      concurrency,
-      staggerDelayMs,
-      iterations: results,
-      summary: { ttiMs: { median: 0, p95: 0, p99: 0 } },
-      wallClockMs,
-      timeToFirstReadyMs: 0,
-      rampProfile: rampProfile.sort((a, b) => a.launchedAt - b.launchedAt),
-      skipped: true,
-      skipReason: 'All sandboxes failed',
-    };
-  }
-
   const successfulTimes = successful.map(r => r.ttiMs);
-  const timeToFirstReadyMs = Math.min(...successfulTimes);
+  const timeToFirstReadyMs = successful.length > 0 ? Math.min(...successfulTimes) : 0;
 
   console.log(`  Wall clock: ${(wallClockMs / 1000).toFixed(2)}s | First ready: ${(timeToFirstReadyMs / 1000).toFixed(2)}s | Success: ${successful.length}/${concurrency}`);
 
@@ -93,7 +77,9 @@ export async function runStaggeredBenchmark(config: StaggeredConfig): Promise<St
     staggerDelayMs,
     iterations: results,
     summary: {
-      ttiMs: computeStats(successfulTimes),
+      ttiMs: successful.length > 0
+        ? computeStats(successfulTimes)
+        : { median: 0, p95: 0, p99: 0 },
     },
     wallClockMs,
     timeToFirstReadyMs,

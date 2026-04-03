@@ -47,22 +47,6 @@ export function printResultsTable(results: BenchmarkResult[]): void {
     const successful = result.iterations.filter(r => !r.error).length;
     const total = result.iterations.length;
     
-    // If all iterations failed, show as FAILED with error reason
-    if (successful === 0 && total > 0) {
-      const firstError = result.iterations.find(r => r.error)?.error || 'Unknown error';
-      const shortError = firstError.length > 40 ? firstError.slice(0, 37) + '...' : firstError;
-      console.log([
-        pad(result.provider, nameWidth),
-        pad('--', 8),
-        pad('--', colWidth),
-        pad('--', colWidth),
-        pad('--', colWidth),
-        pad(`FAILED`, 10),
-      ].join(' | '));
-      continue;
-    }
-
-    // Truly skipped (missing env vars, etc.)
     if (result.skipped) {
       console.log([
         pad(result.provider, nameWidth),

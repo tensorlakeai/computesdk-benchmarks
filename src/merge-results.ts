@@ -184,10 +184,6 @@ function printStorageResultsTable(results: StorageBenchmarkResult[], fileSize: s
     }
     const ok = r.iterations.filter(i => !i.error).length;
     const total = r.iterations.length;
-    if (ok === 0 && total > 0) {
-      console.log([r.provider.padEnd(14), '--'.padEnd(8), '--'.padEnd(14), '--'.padEnd(14), '--'.padEnd(14), 'FAILED'.padEnd(10)].join(' | '));
-      continue;
-    }
     const score = r.compositeScore !== undefined ? r.compositeScore.toFixed(1) : '--';
     const dl = (r.summary.downloadMs.median / 1000).toFixed(2) + 's';
     const tp = r.summary.throughputMbps.median.toFixed(1) + ' Mbps';
@@ -300,10 +296,6 @@ function printBrowserResultsTable(results: BrowserBenchmarkResult[]): void {
     }
     const ok = r.iterations.filter(i => !i.error).length;
     const total = r.iterations.length;
-    if (ok === 0 && total > 0) {
-      console.log([r.provider.padEnd(14), '--'.padEnd(8), '--'.padEnd(12), '--'.padEnd(12), '--'.padEnd(12), '--'.padEnd(12), '--'.padEnd(12), 'FAILED'.padEnd(10)].join(' | '));
-      continue;
-    }
     const score = r.compositeScore !== undefined ? r.compositeScore.toFixed(1) : '--';
     const create = (r.summary.createMs.median / 1000).toFixed(2) + 's';
     const connect = (r.summary.connectMs.median / 1000).toFixed(2) + 's';

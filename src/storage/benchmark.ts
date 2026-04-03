@@ -144,24 +144,6 @@ export async function runStorageBenchmark(config: StorageProviderConfig, fileSiz
 
   const successful = results.filter(r => !r.error);
 
-  // If every iteration failed, mark as skipped
-  if (successful.length === 0) {
-    return {
-      provider: name,
-      mode: 'storage',
-      bucket,
-      fileSizeBytes,
-      iterations: results,
-      summary: {
-        uploadMs: { median: 0, p95: 0, p99: 0 },
-        downloadMs: { median: 0, p95: 0, p99: 0 },
-        throughputMbps: { median: 0, p95: 0, p99: 0 },
-      },
-      skipped: true,
-      skipReason: 'All iterations failed',
-    };
-  }
-
   const uploadTimes = successful.map(r => r.uploadMs);
   const downloadTimes = successful.map(r => r.downloadMs);
   const throughputs = successful.map(r => r.throughputMbps);
