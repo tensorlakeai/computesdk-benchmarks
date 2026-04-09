@@ -35,6 +35,7 @@ function computeBrowserStats(values: number[]): { median: number; p95: number; p
 async function runBrowserIteration(
   provider: any,
   timeout: number,
+  useDefaultContext?: boolean,
 ): Promise<BrowserTimingResult> {
   const timings = { createMs: 0, connectMs: 0, navigateMs: 0, releaseMs: 0, totalMs: 0 };
   const totalStart = performance.now();
@@ -58,8 +59,16 @@ async function runBrowserIteration(
         30_000,
         'CDP connection timed out',
       );
-      const context = await browser.newContext();
-      const page = await context.newPage();
+
+      const [context] = browser.contexts();
+      if (!context) {
+        throw new Error("No default browser context found");
+      }
+      const [page] = context.pages();
+      if (!page) {
+        throw new Error("No default page found");
+      }
+
       timings.connectMs = performance.now() - connectStart;
 
       // 3. Navigate
@@ -73,7 +82,7 @@ async function runBrowserIteration(
     } finally {
       // 4. Close browser and release session
       if (browser) {
-        await browser.close().catch(() => {});
+        await browser.close().catch(() => { });
       }
       const releaseStart = performance.now();
       await withTimeout(
