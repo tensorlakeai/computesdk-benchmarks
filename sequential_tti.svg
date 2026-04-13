@@ -65,7 +65,7 @@
   <text class="table-header" x="960" y="162">Status</text>
 
   <!-- Timestamp -->
-  <text class="timestamp" x="1176" y="224" text-anchor="end">Last updated: Apr 12, 2026, 12:57 AM UTC</text>
+  <text class="timestamp" x="1176" y="224" text-anchor="end">Last updated: Apr 13, 2026, 12:48 AM UTC</text>
 
   <!-- Footnote -->
   <text class="timestamp" x="24" y="238">* Uses ComputeSDK orchestrator</text>
