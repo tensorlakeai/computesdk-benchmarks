@@ -87,7 +87,6 @@ export const providers: ProviderConfig[] = [
     requiredEnvVars: ['TENSORLAKE_API_KEY'],
     createCompute: () => tensorlake({
       apiKey: process.env.TENSORLAKE_API_KEY!,
-<<<<<<< HEAD
       apiUrl: process.env.TENSORLAKE_API_URL,
     }),
   },
@@ -102,11 +101,6 @@ export const providers: ProviderConfig[] = [
     requiredEnvVars: ['VERCEL_TOKEN', 'VERCEL_TEAM_ID', 'VERCEL_PROJECT_ID'],
     createCompute: () => vercel({ token: process.env.VERCEL_TOKEN!, teamId: process.env.VERCEL_TEAM_ID!, projectId: process.env.VERCEL_PROJECT_ID! }),
   },
-=======
-      region: process.env.TENSORLAKE_REGION,
-    }),
-  },
->>>>>>> f01dd2015f8b7e1b0615de04bbf53bc00820fd72
   //
   // --- Automatic mode (via ComputeSDK gateway) ---
   // {
