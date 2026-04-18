@@ -61,7 +61,7 @@
   <text class="table-header" x="960" y="162">Status</text>
 
   <!-- Timestamp -->
-  <text class="timestamp" x="1176" y="224" text-anchor="end">Last updated: Apr 17, 2026, 12:53 AM UTC</text>
+  <text class="timestamp" x="1176" y="224" text-anchor="end">Last updated: Apr 18, 2026, 12:48 AM UTC</text>
 
   <!-- Footnote -->
   <text class="timestamp" x="24" y="238">Tests upload then download. Lower download time is better. Throughput is computed from download timing.</text>
