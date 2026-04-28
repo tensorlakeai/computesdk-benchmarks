@@ -65,7 +65,7 @@
   <text class="table-header" x="960" y="162">Status</text>
 
   <!-- Timestamp -->
-  <text class="timestamp" x="1176" y="264" text-anchor="end">Last updated: Apr 27, 2026, 12:49 AM UTC</text>
+  <text class="timestamp" x="1176" y="264" text-anchor="end">Last updated: Apr 28, 2026, 12:53 AM UTC</text>
 
   <!-- Footnote -->
   <text class="timestamp" x="24" y="278">Staggered mode: sandboxes launched with delay between each</text>
