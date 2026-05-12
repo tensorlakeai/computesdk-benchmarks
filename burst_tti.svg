@@ -65,7 +65,7 @@
   <text class="table-header" x="960" y="162">Status</text>
 
   <!-- Timestamp -->
-  <text class="timestamp" x="1176" y="264" text-anchor="end">Last updated: May 11, 2026, 12:56 AM UTC</text>
+  <text class="timestamp" x="1176" y="264" text-anchor="end">Last updated: May 12, 2026, 12:50 AM UTC</text>
 
   <!-- Footnote -->
   <text class="timestamp" x="24" y="278">Burst mode: all sandboxes launched simultaneously</text>
