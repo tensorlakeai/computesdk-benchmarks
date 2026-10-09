@@ -98,9 +98,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with:
+          version: 11.28.5
+          run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: '24'
           cache: 'pnpm'
       # ComputeSDK runners get no GitHub OIDC token, so nscloud-setup's
       # `nsc auth exchange-github-token` cannot work there. Pre-seed the
@@ -172,9 +175,12 @@ jobs:
           # fail when the remote has advanced past the shallow boundary.
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
+        with:
+          version: 11.28.5
+          run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: '24'
           cache: 'pnpm'
       # ComputeSDK runners get no GitHub OIDC token, so nscloud-setup's
       # `nsc auth exchange-github-token` cannot work there. Pre-seed the

@@ -175,3 +175,12 @@ For full details on each suite, see:
 **Powered by ComputeSDK** — We use [ComputeSDK](https://github.com/computesdk/computesdk), a multi-provider SDK, to test all sandbox providers with the same code. One API, multiple providers, fair comparison.
 
 MIT License
+
+## Maintainer dependency policy
+
+Use pnpm 11.28.5 with Node.js 22+. CI source installs use frozen locks and
+disabled lifecycle hooks. Registry release timestamps are required and the
+release delay is enforced even for cached/frozen entries. Existing stronger
+delays are preserved. Run reviewed native setup explicitly and install local
+git hooks with `pnpm run setup:git-hooks` when that script is present. Public
+npm consumer commands and upstream compatibility fixtures remain supported.
